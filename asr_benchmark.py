@@ -298,15 +298,15 @@ def transcribe_indicwhisper_local(audio_path: Path, cache: dict) -> ASRResult:
     try:
         t0 = time.time()
         if "indicwhisper" not in cache:
-            print("Loading local AI4Bharat IndicWhisper pipeline (could take a moment)...")
+            print("Loading local OpenAI Whisper Medium pipeline (could take a moment)...")
             cache["indicwhisper"] = pipeline(
                 "automatic-speech-recognition",
-                model="collabora/whisper-medium-hindi",
+                model="openai/whisper-medium",
                 generate_kwargs={"language": "hindi", "task": "transcribe"}
             )
             
         pipe = cache["indicwhisper"]
-        result = pipe(str(audio_path))
+        result = pipe(str(audio_path), chunk_length_s=30.0)
         latency = (time.time() - t0) * 1000
         return ASRResult(filename, "IndicWhisper HF", result.get("text", "").strip(), latency)
     except Exception as e:
