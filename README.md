@@ -39,20 +39,20 @@ Set them as environment variables:
 
 **In PowerShell (Windows):**
 ```powershell
-$env:DEEPGRAM_API_KEY="0c386e1cf781eaa9acac2e83a9f5878c4d66f818"
-$env:SARVAM_API_KEY="sk_1lnojldo_khBQP8miRGWEM7GFr2dptSyx"
+$env:DEEPGRAM_API_KEY="your_deepgram_api_key_here"
+$env:SARVAM_API_KEY="your_sarvam_api_key_here"
 ```
 
 **In Command Prompt (Windows):**
 ```cmd
-set DEEPGRAM_API_KEY=0c386e1cf781eaa9acac2e83a9f5878c4d66f818
-set SARVAM_API_KEY=sk_1lnojldo_khBQP8miRGWEM7GFr2dptSyx
+set DEEPGRAM_API_KEY=your_deepgram_api_key_here
+set SARVAM_API_KEY=your_sarvam_api_key_here
 ```
 
 **In Terminal (Linux/macOS):**
 ```bash
-export DEEPGRAM_API_KEY="0c386e1cf781eaa9acac2e83a9f5878c4d66f818"
-export SARVAM_API_KEY="sk_1lnojldo_khBQP8miRGWEM7GFr2dptSyx"
+export DEEPGRAM_API_KEY="your_deepgram_api_key_here"
+export SARVAM_API_KEY="your_sarvam_api_key_here"
 ```
 
 ---
@@ -94,8 +94,8 @@ Since local Whisper models (especially AI4Bharat's IndicWhisper) run much faster
 5. Set the API keys and run the pipeline:
    ```python
    import os
-   os.environ["DEEPGRAM_API_KEY"] = "0c386e1cf781eaa9acac2e83a9f5878c4d66f818"
-   os.environ["SARVAM_API_KEY"] = "sk_1lnojldo_khBQP8miRGWEM7GFr2dptSyx"
+   os.environ["DEEPGRAM_API_KEY"] = "your_actual_key"
+   os.environ["SARVAM_API_KEY"] = "your_actual_key"
 
    # Run the script
    %run asr_benchmark.py

@@ -15,8 +15,8 @@ Computes:
 
 Usage:
   1. Set environment variables:
-     $env:DEEPGRAM_API_KEY="0c386e1cf781eaa9acac2e83a9f5878c4d66f818"
-     $env:SARVAM_API_KEY="sk_1lnojldo_khBQP8miRGWEM7GFr2dptSyx"
+     $env:DEEPGRAM_API_KEY="your_deepgram_api_key_here"
+     $env:SARVAM_API_KEY="your_sarvam_api_key_here"
   2. Run:
      python asr_benchmark.py
 """
@@ -58,8 +58,8 @@ GROUND_TRUTH_CSV = Path("./ground_truth.csv")
 OUTPUT_CSV = Path("./results.csv")
 
 # Load API keys from environment or placeholders
-DEEPGRAM_API_KEY = os.getenv("DEEPGRAM_API_KEY", "0c386e1cf781eaa9acac2e83a9f5878c4d66f818")
-SARVAM_API_KEY = os.getenv("SARVAM_API_KEY", "sk_1lnojldo_khBQP8miRGWEM7GFr2dptSyx")
+DEEPGRAM_API_KEY = os.getenv("DEEPGRAM_API_KEY", "")
+SARVAM_API_KEY = os.getenv("SARVAM_API_KEY", "")
 
 # ── DATA STRUCTURES ───────────────────────────────────────────────────────────
 @dataclass
