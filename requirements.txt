@@ -1,0 +1,9 @@
+jiwer
+rapidfuzz
+requests
+soundfile
+numpy
+openai-whisper
+transformers
+torch
+gTTS
