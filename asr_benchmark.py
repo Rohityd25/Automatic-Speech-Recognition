@@ -290,25 +290,47 @@ def transcribe_whisper_local(audio_path: Path, cache: dict) -> ASRResult:
         return ASRResult(filename, "Whisper Local (Tiny)", "", 0.0, str(e))
 
 def transcribe_indicwhisper_local(audio_path: Path, cache: dict) -> ASRResult:
-    """Transcribes audio using AI4Bharat IndicWhisper (local HF pipeline)."""
+    """Transcribes audio using Whisper Medium (local HF model)."""
     filename = audio_path.name
     if not HAS_TRANSFORMERS:
         return ASRResult(filename, "IndicWhisper HF", "", 0.0, "transformers or torch not installed")
         
     try:
         t0 = time.time()
-        if "indicwhisper" not in cache:
-            print("Loading local OpenAI Whisper Medium pipeline (could take a moment)...")
-            cache["indicwhisper"] = pipeline(
-                "automatic-speech-recognition",
-                model="openai/whisper-medium",
-                generate_kwargs={"language": "hindi", "task": "transcribe"}
-            )
+        import torch
+        from transformers import AutoModelForSpeechSeq2Seq, AutoProcessor
+        import librosa
+        
+        device = "cuda:0" if torch.cuda.is_available() else "cpu"
+        torch_dtype = torch.float16 if torch.cuda.is_available() else torch.float32
+        
+        if "indicwhisper_model" not in cache:
+            print("Loading local OpenAI Whisper Medium model...")
+            model_id = "openai/whisper-medium"
+            cache["indicwhisper_model"] = AutoModelForSpeechSeq2Seq.from_pretrained(
+                model_id, torch_dtype=torch_dtype, low_cpu_mem_usage=True
+            ).to(device)
+            cache["indicwhisper_processor"] = AutoProcessor.from_pretrained(model_id)
             
-        pipe = cache["indicwhisper"]
-        result = pipe(str(audio_path), chunk_length_s=30.0)
+        model = cache["indicwhisper_model"]
+        processor = cache["indicwhisper_processor"]
+        
+        # Load audio data as raw numpy array at 16kHz
+        audio_data, sr = librosa.load(str(audio_path), sr=16000)
+        
+        # Preprocess audio and send to GPU/CPU
+        input_features = processor(audio_data, sampling_rate=16000, return_tensors="pt").input_features
+        input_features = input_features.to(device, dtype=torch_dtype)
+        
+        # Generate transcription
+        forced_decoder_ids = processor.get_decoder_prompt_ids(language="hindi", task="transcribe")
+        predicted_ids = model.generate(input_features, forced_decoder_ids=forced_decoder_ids)
+        
+        # Decode predicted token ids to text
+        transcription = processor.batch_decode(predicted_ids, skip_special_tokens=True)[0]
+        
         latency = (time.time() - t0) * 1000
-        return ASRResult(filename, "IndicWhisper HF", result.get("text", "").strip(), latency)
+        return ASRResult(filename, "IndicWhisper HF", transcription.strip(), latency)
     except Exception as e:
         return ASRResult(filename, "IndicWhisper HF", "", 0.0, str(e))
 
