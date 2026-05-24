@@ -15,8 +15,8 @@ Computes:
 
 Usage:
   1. Set environment variables:
-     $env:DEEPGRAM_API_KEY="bf62157ea40ec73b5e7962a9e4c9b466ec24e18b"
-     $env:SARVAM_API_KEY="sk_hmhwqpi7_0OPD60V5avglCnJRGwFEZE1n"
+     $env:DEEPGRAM_API_KEY="0c386e1cf781eaa9acac2e83a9f5878c4d66f818"
+     $env:SARVAM_API_KEY="sk_1lnojldo_khBQP8miRGWEM7GFr2dptSyx"
   2. Run:
      python asr_benchmark.py
 """
