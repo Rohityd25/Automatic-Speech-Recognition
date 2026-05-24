@@ -301,7 +301,7 @@ def transcribe_indicwhisper_local(audio_path: Path, cache: dict) -> ASRResult:
             print("Loading local AI4Bharat IndicWhisper pipeline (could take a moment)...")
             cache["indicwhisper"] = pipeline(
                 "automatic-speech-recognition",
-                model="ai4bharat/indicwhisper",
+                model="collabora/whisper-medium-hindi",
                 generate_kwargs={"language": "hindi", "task": "transcribe"}
             )
             
