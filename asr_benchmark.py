@@ -31,7 +31,9 @@ from pathlib import Path
 from dataclasses import dataclass
 from typing import Optional, Dict, List
 
-# ── Dependency Checks & Fallbacks ───────────────────────────────────────────
+# ------------------------------------------------------------------------------
+# Dependency Verification & Fallbacks
+# ------------------------------------------------------------------------------
 HAS_METRICS = True
 try:
     import jiwer
@@ -52,7 +54,9 @@ try:
 except ImportError:
     HAS_TRANSFORMERS = False
 
-# ── CONFIG ────────────────────────────────────────────────────────────────────
+# ------------------------------------------------------------------------------
+# Configuration Settings
+# ------------------------------------------------------------------------------
 AUDIO_DIR = Path("./audio")
 GROUND_TRUTH_CSV = Path("./ground_truth.csv")
 OUTPUT_CSV = Path("./results.csv")
@@ -61,7 +65,9 @@ OUTPUT_CSV = Path("./results.csv")
 DEEPGRAM_API_KEY = os.getenv("DEEPGRAM_API_KEY", "")
 SARVAM_API_KEY = os.getenv("SARVAM_API_KEY", "")
 
-# ── DATA STRUCTURES ───────────────────────────────────────────────────────────
+# ------------------------------------------------------------------------------
+# Data Structure Classes
+# ------------------------------------------------------------------------------
 @dataclass
 class ASRResult:
     filename: str
@@ -83,7 +89,9 @@ class EvalResult:
     reference: str
     expected_locality: str
 
-# ── UTILITIES ─────────────────────────────────────────────────────────────────
+# ------------------------------------------------------------------------------
+# Helper & Text Utilities
+# ------------------------------------------------------------------------------
 def load_ground_truth(csv_path: Path) -> Dict[str, Dict[str, str]]:
     """Loads ground truth references from CSV."""
     if not csv_path.exists():
@@ -109,7 +117,9 @@ def normalize_text(text: str) -> str:
     text = re.sub(r"\s+", " ", text)
     return text
 
-# ── METRICS COMPUTATION ───────────────────────────────────────────────────────
+# ------------------------------------------------------------------------------
+# ASR Evaluation Metrics
+# ------------------------------------------------------------------------------
 def compute_wer(reference: str, hypothesis: str) -> float:
     if not HAS_METRICS:
         return 0.5  # Stub
@@ -194,7 +204,9 @@ def evaluate_locality(predicted: str, expected_locality: str) -> tuple[int, floa
             
     return exact, fuzzy
 
-# ── ASR CLIENTS ───────────────────────────────────────────────────────────────
+# ------------------------------------------------------------------------------
+# ASR Engine Integrations (APIs & Local Models)
+# ------------------------------------------------------------------------------
 def transcribe_deepgram(audio_path: Path) -> ASRResult:
     """Transcribes audio using Deepgram Nova-2 Multilingual API."""
     import requests
@@ -334,7 +346,9 @@ def transcribe_indicwhisper_local(audio_path: Path, cache: dict) -> ASRResult:
     except Exception as e:
         return ASRResult(filename, "IndicWhisper HF", "", 0.0, str(e))
 
-# ── DEMO / MOCK ASR MODE ──────────────────────────────────────────────────────
+# ------------------------------------------------------------------------------
+# Simulated API Transcriptions (For Local Testing)
+# ------------------------------------------------------------------------------
 def transcribe_mock(audio_path: Path, model_name: str, gt_transcript: str) -> ASRResult:
     """Simulates ASR responses with representative errors to verify pipeline metrics."""
     filename = audio_path.name
@@ -379,7 +393,9 @@ def transcribe_mock(audio_path: Path, model_name: str, gt_transcript: str) -> AS
         
     return ASRResult(filename, model_name, normalized, latency)
 
-# ── MAIN PIPELINE EXECUTION ───────────────────────────────────────────────────
+# ------------------------------------------------------------------------------
+# Main Evaluation Pipeline
+# ------------------------------------------------------------------------------
 def main():
     print("==================================================")
     print("    ASR Benchmarking Evaluation Pipeline v1.0    ")
